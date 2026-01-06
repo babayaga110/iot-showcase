@@ -16,13 +16,22 @@ If asked about a specific game from the catalogue (Reaction Arena, Punch Power W
 `;
 
 export class GeminiService {
-  private ai: GoogleGenAI;
+  private ai: GoogleGenAI | null = null;
 
   constructor() {
-    this.ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+    const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : '';
+    if (apiKey) {
+      this.ai = new GoogleGenAI({ apiKey });
+    }
   }
 
   async chat(message: string): Promise<string> {
+    if (!this.ai) {
+      const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : '';
+      if (!apiKey) return "API Key not configured. Please check your environment variables.";
+      this.ai = new GoogleGenAI({ apiKey });
+    }
+
     try {
       const response = await this.ai.models.generateContent({
         model: 'gemini-3-flash-preview',
@@ -36,7 +45,7 @@ export class GeminiService {
       return response.text || "I'm sorry, I couldn't process that request.";
     } catch (error) {
       console.error("Gemini API Error:", error);
-      return "I'm having trouble connecting to my strategist network. Please try again later.";
+      return "I'm having trouble connecting to my strategist network. Please ensure the API Key is valid.";
     }
   }
 }
