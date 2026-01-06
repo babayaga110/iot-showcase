@@ -1,0 +1,8 @@
+{
+  "name": "Smart Outdoor AI & IoT Games Presentation",
+  "description": "A premium, futuristic corporate presentation deck showcasing AI and IoT-powered outdoor games for engagement-driven events.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
